@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -48,6 +51,55 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  Future<void> _initServer () async {
+    // bind the socket server to an address and port
+  final server = await ServerSocket.bind("127.0.0.1", 18910);
+
+  // listen for connections from client(s)
+  server.listen((client) {
+    handleConnection(client);
+  });
+}
+
+void handleConnection(Socket client) {
+  print('Connection from Client:'
+      ' ${client.remoteAddress.address}:${client.remotePort}');
+
+  // listen for events from the client
+  client.listen(
+
+    // handle data from the client
+    (Uint8List data) async {
+      await Future.delayed(Duration(seconds: 1));
+      final messageFromClient = String.fromCharCodes(data);
+      if (messageFromClient == 'Knock, knock.') {
+        client.write('Who is there?');
+      } else if (messageFromClient.length < 10) {
+        client.write('$messageFromClient who?!');
+      } else {
+        client.write('Very funny.');
+        client.close();
+      }
+    },
+
+    // handle errors
+    onError: (error) {
+      print(error);
+      client.close();
+    },
+
+    // handle the client closing the connection
+    onDone: () {
+      print('Client left');
+      client.close();
+    },
+  );
+}
+
+void initState() {
+  _initServer();
+}
   int _counter = 0;
 
   void _incrementCounter() {
