@@ -71,16 +71,13 @@ void handleConnection(Socket client) {
 
     // handle data from the client
     (Uint8List data) async {
-      await Future.delayed(Duration(seconds: 1));
+    
       final messageFromClient = String.fromCharCodes(data);
-      if (messageFromClient == 'Knock, knock.') {
-        client.write('Who is there?');
-      } else if (messageFromClient.length < 10) {
-        client.write('$messageFromClient who?!');
-      } else {
-        client.write('Very funny.');
-        client.close();
-      }
+      final nom = int.parse(messageFromClient);
+      setState(() {
+        _counter = nom;
+      });
+  
     },
 
     // handle errors
