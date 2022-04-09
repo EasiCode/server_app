@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:server_app/server.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,58 +52,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-   Socket? _client;
-  Future<void> _initServer() async {
-    // bind the socket server to an address and port
-    final server = await ServerSocket.bind("127.0.0.1", 18910);
-
-    // listen for connections from client(s)
-    server.listen((client) {
-      handleConnection(client);
-    });
-  }
-
-  void handleConnection(Socket client) {
-    _client = client;
-    print('Connection from Client:'
-
-        ' ${client.remoteAddress.address}:${client.remotePort}');
-
-    // listen for events from the client
-    client.listen(
-      // handle data from the client
-      (Uint8List data) async {
-        final messageFromClient = String.fromCharCodes(data);
-        final nom = int.parse(messageFromClient);
-        setState(() {
-          _counter = nom;
-        });
-        print('client: $nom');
-      },
-
-      // handle errors
-      onError: (error) {
-        print(error);
-         _client = null;
-        client.close();
-      },
-
-      // handle the client closing the connection
-      onDone: () {
-        print('Client left');
-        _client = null;
-        client.close();
-      },
-    );
-  }
-
-  Future<void> sendMessage( String message) async {
-    print('server: $message');
-    _client?.write(message);
-  }
-
+  final server = Server();
   void initState() {
-    _initServer();
+    server.sendData.listen((messageFromClient) {
+      final nom = int.parse(messageFromClient);
+      setState(() {
+        _counter = nom;
+      });
+    });
   }
 
   int _counter = 0;
@@ -115,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter--;
-      sendMessage('$_counter');
+      server.sendMessage('$_counter');
     });
   }
 
