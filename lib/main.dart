@@ -1,4 +1,7 @@
+import 'package:bonsoir/bonsoir.dart';
 import 'package:flutter/material.dart';
+import 'package:server_app/server.dart';
+import 'package:server_app/service_publisher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,7 +51,41 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late Server _server;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 1. Create and bind a socket and listen to socket
+    const ip = '127.0.0.1';
+    const port = 22345;
+    final _server = Server(ip, port);
+
+    // 2. Broadcast device info on local network
+    _initBonjour(ip, port);
+
+    _server.sendData.listen((messageFromClient) {
+      final nom = int.parse(messageFromClient);
+      setState(() {
+        _counter = nom;
+      });
+    });
+  }
+
   int _counter = 0;
+  _initBonjour(String ip, int port) async {
+    BonsoirService service = BonsoirService(
+      name: 'My wonderful service',
+      type: '_wonderful-service._tcp',
+      port: port,
+    );
+
+    // And now we can broadcast it :
+    BonsoirBroadcast broadcast = BonsoirBroadcast(service: service);
+    await broadcast.ready;
+    await broadcast.start();
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -57,7 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
+      _counter--;
+      _server.sendMessage('$_counter');
     });
   }
 
@@ -96,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'You have pushed the button this many time(s):',
             ),
             Text(
               '$_counter',
