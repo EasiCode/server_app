@@ -1,8 +1,6 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:server_app/server.dart';
+import 'package:server_app/service_publisher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -54,6 +52,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final server = Server();
   void initState() {
+    _initBonjour();
     server.sendData.listen((messageFromClient) {
       final nom = int.parse(messageFromClient);
       setState(() {
@@ -63,6 +62,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   int _counter = 0;
+  _initBonjour() async {
+    final broadcastModel = BonsoirBroadcastModel();
+    broadcastModel.start();
+    //final discoveryModel = BonsoirDiscoveryModel();
+  }
 
   void _incrementCounter() {
     setState(() {

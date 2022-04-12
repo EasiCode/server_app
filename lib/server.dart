@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:io';
 
@@ -14,7 +16,7 @@ class Server {
   Socket? _client;
   Future<void> inito() async {
     // bind the socket server to an address and port
-    final server = await ServerSocket.bind("127.0.0.1", 18910);
+    final server = await ServerSocket.bind("127.0.0.1", 18910, shared: true);
 
     // listen for connections from client(s)
     server.listen((client) {
