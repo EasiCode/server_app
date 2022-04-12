@@ -17,7 +17,7 @@ class ServicePublisher {
 /// Provider model that allows to handle Bonsoir broadcasts.
 class BonsoirBroadcastModel extends ChangeNotifier {
   /// The current Bonsoir broadcast object instance.
-   BonsoirBroadcast? _bonsoirBroadcast;
+  BonsoirBroadcast? _bonsoirBroadcast;
 
   /// Whether Bonsoir is currently broadcasting the app's service.
   bool _isBroadcasting = false;
@@ -32,7 +32,7 @@ class BonsoirBroadcastModel extends ChangeNotifier {
           BonsoirBroadcast(service: (await AppService.getService())!);
       await _bonsoirBroadcast!.ready;
       // create server socket and broadcast service
-      Server();
+      // Server();
     }
 
     await _bonsoirBroadcast!.start();

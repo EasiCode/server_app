@@ -6,24 +6,31 @@ import 'dart:io';
 import 'dart:typed_data';
 
 class Server {
-  Server() {
+  Server(this.ip, this.port) {
     _sendData = StreamController<String>.broadcast();
     sendData = _sendData.stream;
-    inito();
+    init();
   }
+
+  final String ip;
+  final int port;
+
   late StreamController<String> _sendData;
   late Stream<String> sendData;
   Socket? _client;
-  Future<void> inito() async {
-    // bind the socket server to an address and port
-    final server = await ServerSocket.bind("127.0.0.1", 18910, shared: true);
 
-    // listen for connections from client(s)
-    server.listen((client) {
-      handleConnection(client);
-    });
+  // ...........................................................................
+  ServerSocket? _server;
+
+  Future<void> init() async {
+    // bind the socket server to an address and port
+    _server = await ServerSocket.bind(ip, port, shared: true)
+      ..listen((client) {
+        handleConnection(client);
+      });
   }
 
+  // Accept Connection
   void handleConnection(Socket client) {
     _client = client;
     print('Connection from Client:'
