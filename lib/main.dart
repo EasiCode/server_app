@@ -51,7 +51,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final server = Server();
+
+  @override
   void initState() {
+    super.initState();
     _initBonjour();
     server.sendData.listen((messageFromClient) {
       final nom = int.parse(messageFromClient);
