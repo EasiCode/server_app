@@ -20,17 +20,19 @@ class Server {
   Socket? _client;
 
   // ...........................................................................
-  ServerSocket? _server;
+  //ServerSocket? _server;
 
   Future<void> init() async {
     // bind the socket server to an address and port
-    _server = await ServerSocket.bind(ip, port, shared: true)
-      ..listen((client) {
-        handleConnection(client);
-      });
+    final server = await ServerSocket.bind(ip, port, shared: true);
+
+    //listen for connection from client
+    server.listen((_) {
+      handleConnection(_);
+    });
   }
 
-  // Accept Connection
+  // Accept Connection from client
   void handleConnection(Socket client) {
     _client = client;
     print('Connection from Client:'
@@ -62,6 +64,7 @@ class Server {
     );
   }
 
+  //handling data transfer to client
   Future<void> sendMessage(String message) async {
     print('server: $message');
     _client?.write(message);

@@ -4,16 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:server_app/server.dart';
 import 'package:server_app/bonsoir_servize.dart';
 
-class ServicePublisher {
-  Future<String> ipAddress() {
-    return Future.value('127.0.0.1');
-  }
-
-  Future<int> port() {
-    return Future.value(18910);
-  }
-}
-
 /// Provider model that allows to handle Bonsoir broadcasts.
 class BonsoirBroadcastModel extends ChangeNotifier {
   /// The current Bonsoir broadcast object instance.
