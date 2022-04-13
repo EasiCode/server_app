@@ -1,4 +1,5 @@
 import 'package:bonsoir/bonsoir.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:server_app/server.dart';
 //import 'package:server_app/service_publisher.dart';
@@ -47,11 +48,15 @@ class _MyHomePageState extends State<MyHomePage> {
     _initBonjour(ip, port);
 
     //listen for data from client
-    server.sendData.listen((messageFromClient) {
-      final nom = int.parse(messageFromClient);
+
+    server.receivedData.listen((messageFromClient) {
+      if (kDebugMode) {
+        print('Received data of size ${messageFromClient.length}');
+      }
+      /* final nom = int.parse(messageFromClient);
       setState(() {
         _counter = nom;
-      });
+      });*/
     });
   }
 
@@ -74,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter--;
       //send data to client
-      server.sendMessage('$_counter');
+      // server.sendMessage('$_counter');
     });
   }
 

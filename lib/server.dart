@@ -7,16 +7,16 @@ import 'dart:typed_data';
 
 class Server {
   Server(this.ip, this.port) {
-    _sendData = StreamController<String>.broadcast();
-    sendData = _sendData.stream;
+    _receivedData = StreamController<Uint8List>.broadcast();
+    receivedData = _receivedData.stream;
     init();
   }
 
   final String ip;
   final int port;
 
-  late StreamController<String> _sendData;
-  late Stream<String> sendData;
+  late StreamController<Uint8List> _receivedData;
+  late Stream<Uint8List> receivedData;
   Socket? _client;
 
   // ...........................................................................
@@ -42,10 +42,11 @@ class Server {
     client.listen(
       // handle data from the client
       (Uint8List data) async {
-        final messageFromClient = String.fromCharCodes(data);
-        final nom = int.parse(messageFromClient);
-        _sendData.add(messageFromClient);
-        print('client: $nom');
+        // final messageFromClient = String.fromCharCodes(data);
+        // final nom = int.parse(messageFromClient);
+        // _receivedData.add(messageFromClient);
+        // print('client: $nom');
+        _receivedData.add(data);
       },
 
       // handle errors
