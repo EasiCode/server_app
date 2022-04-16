@@ -46,6 +46,7 @@ class Server {
         // final nom = int.parse(messageFromClient);
         // _receivedData.add(messageFromClient);
         // print('client: $nom');
+        _sendAcknowledgmentOnStopByteReceived(data);
         _receivedData.add(data);
       },
 
@@ -65,9 +66,27 @@ class Server {
     );
   }
 
+  // ...........................................................................
+  _sendAcknowledgmentOnStopByteReceived(Uint8List buffer) {
+    // Iterate all bytes in buffer, check if there is a stop byte.
+    // If stop byte is found, send acknowledgement.
+    for (int byte in buffer) {
+      const stopByte = 0xAA;
+      if (byte == stopByte) {
+        _sendAcknowledgement();
+      }
+    }
+  }
+
+  // ...........................................................................
+  _sendAcknowledgement() {
+    _client?.write('Acknowledgement');
+  }
+
   //handling data transfer to client
   Future<void> sendMessage(String message) async {
     print('server: $message');
     _client?.write(message);
+    await _client?.flush();
   }
 }
