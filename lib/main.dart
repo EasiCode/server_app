@@ -1,9 +1,7 @@
 import 'package:bonsoir/bonsoir.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:server_app/tcp_server.dart';
-//import 'package:server_app/service_publisher.dart';
 import 'package:server_app/bonsoir_servize.dart';
 import 'package:server_app/wifi_direct_server.dart';
 

@@ -1,9 +1,9 @@
-import 'dart:async';
+// ignore_for_file: avoid_print
 
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 
 late NearbyService nearbyService;
- 
+
 class NearbyServer {
   NearbyServer() {
     init();
@@ -24,5 +24,4 @@ class NearbyServer {
           }
         });
   }
-  
 }
